@@ -2,6 +2,7 @@
 # Create your models here.
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from .managers import UserManager
 
 
 class User(AbstractUser):
@@ -26,11 +27,14 @@ class User(AbstractUser):
     )
 
     phone_number = models.CharField(
-        max_length=15,
-        unique=True,
-        help_text='Kenyan format, e.g. 0712345678 or +254712345678.',
-    )
+    max_length=15,
+    unique=True,
+    null=True,
+    blank=True,
+    help_text='Kenyan format, e.g. 0712345678 or +254712345678. Required in forms.',
 
+)
+    objects = UserManager()
     def __str__(self):
         return f'{self.get_full_name() or self.username} ({self.get_role_display()})'
 
