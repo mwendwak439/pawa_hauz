@@ -22,7 +22,6 @@ ALLOWED_HOSTS = []
 # --- Applications ---
 DJANGO_APPS = [
     'django.contrib.admin',
-    
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -33,6 +32,7 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = []
 
 LOCAL_APPS = [
+     'apps.accounts',
     # 'apps.accounts',   # uncomment in Phase 2 once the app exists
     # 'apps.core',       # uncomment in Phase 4 once the app exists
 ]
