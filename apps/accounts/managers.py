@@ -1,26 +1,24 @@
 from django.contrib.auth.models import UserManager as BaseUserManager
-from django.core.exceptions import ValidationError
 
 
 class UserManager(BaseUserManager):
     """
     Custom manager for the gym User model.
 
-    Enforces the business rule that every user has a phone number,
-    and that superusers are always owners.
+    Permissive: does not enforce phone_number at the manager level.
+    Enforcement of phone_number happens in forms and the custom
+    createsuperuser command. The manager stays flexible so data
+    migrations, seeds, and scripts can create users without friction.
+
+    Role enforcement for superusers IS kept here because it is a
+    structural rule, not a data-entry rule.
     """
 
     use_in_migrations = True
 
     def _create_user(self, username, email, password, phone_number, role, **extra_fields):
-        """
-        Internal helper. Validates common fields and creates a user.
-        """
         if not username:
             raise ValueError('Username is required.')
-
-        if not phone_number:
-            raise ValueError('Phone number is required.')
 
         if not password:
             raise ValueError('Password is required.')
@@ -42,6 +40,8 @@ class UserManager(BaseUserManager):
     def create_user(self, username, email=None, password=None, phone_number=None, role=None, **extra_fields):
         """
         Create and save a regular user.
+
+        phone_number may be None. Enforcement is done at the form level.
         """
         if role is None:
             role = self.model.Role.MEMBER

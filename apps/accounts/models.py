@@ -1,7 +1,6 @@
-
-# Create your models here.
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+
 from .managers import UserManager
 
 
@@ -12,6 +11,11 @@ class User(AbstractUser):
     Every person who logs in is a User. Role-specific data lives in
     profile models in their own apps (MemberProfile, TrainerProfile).
     """
+
+    # Django's createsuperuser command will prompt for these fields.
+    # The custom createsuperuser command in this app extends that
+    # behavior to also prompt for phone_number.
+    REQUIRED_FIELDS = ['email', 'phone_number']
 
     class Role(models.TextChoices):
         OWNER = 'owner', 'Owner'
@@ -27,14 +31,15 @@ class User(AbstractUser):
     )
 
     phone_number = models.CharField(
-    max_length=15,
-    unique=True,
-    null=True,
-    blank=True,
-    help_text='Kenyan format, e.g. 0712345678 or +254712345678. Required in forms.',
+        max_length=15,
+        unique=True,
+        null=True,
+        blank=True,
+        help_text='Kenyan format, e.g. 0712345678 or +254712345678. Required in forms.',
+    )
 
-)
     objects = UserManager()
+
     def __str__(self):
         return f'{self.get_full_name() or self.username} ({self.get_role_display()})'
 
